@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 class LoanScenario():
-    def __init__(self, L0, B0, LC, R, start_year, end_year) -> None:
+    def __init__(self, L0, B0, LC, BC, R, start_year, end_year) -> None:
         # Setup initial variables/parameters
 
         self.calculated = False
@@ -23,10 +23,12 @@ class LoanScenario():
         self.df['LC'] = [0.0] * len(self.df)
         self.df['L'] = [0.0] * len(self.df)
         self.df['B'] = [0.0] * len(self.df)
+        self.df['BC'] = [0.0] * len(self.df)
 
         # Set each cell in the 'R' column equal to a variable called R
         self.df['R'] = R
         self.df['LC'] = LC
+        self.df['BC'] = BC
 
         # Set the initial values for 'L' and 'B'
         self.df.at[0, 'L'] = L0
@@ -55,7 +57,7 @@ class LoanScenario():
     @staticmethod
     def calculate_L(df):
         for i in range(1, len(df)):
-            df.at[i, 'L'] = (df.at[i - 1, 'L'] - df.at[i, 'LC']) * df.at[i, 'r']
+            df.at[i, 'L'] = (df.at[i - 1, 'L'] + df.at[i, 'LC']) * df.at[i, 'r']
 
         # Loan cannot be less than 0
         df["L"] = df["L"].apply(lambda x: 0 if x < 0 else x)
@@ -64,5 +66,5 @@ class LoanScenario():
     @staticmethod
     def calculate_B(df):
         for i in range(1, len(df)):
-            df.at[i, 'B'] = df.at[i - 1, 'B'] + df.at[i, 'LC']
+            df.at[i, 'B'] = df.at[i - 1, 'B'] + df.at[i, 'LC'] + df.at[i, 'BC']
         return df
