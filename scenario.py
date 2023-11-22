@@ -38,7 +38,7 @@ class LoanScenario:
         # Add the BC column
         self.df = self.fill_column_by_date(self.df, column="BC", values_dict=BC_dict)
 
-        # Set the initial values for 'L' and 'B'
+        # Add L and B columns
         self.df["L"] = [0.0] * len(self.df)
         self.df["B"] = [0.0] * len(self.df)
         self.df.at[0, "L"] = L0
@@ -102,7 +102,7 @@ class LoanScenario:
         # Merge the original DataFrame with the values DataFrame using 'Date'
         merged_df = pd.merge(df, values_df, on="Date", how="left")
 
-        # Forward-fill missing values in the 'Value' column
+        # Forward-fill missing values
         merged_df[column].ffill(inplace=True)
 
         # The forward filling may leave NaNs in the first rows
