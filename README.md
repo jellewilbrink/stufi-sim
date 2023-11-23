@@ -13,6 +13,7 @@ poetry install
 ```
 
 Alternatively, you can use a regular python script instead of a jupyter notebook. 
+Poetry is also optional. The required packages (listed in `pyproject.toml`) can also be installed using for instance `pip`.
 
 ## Usage
 
