@@ -94,7 +94,7 @@ class LoanScenario:
     @staticmethod
     def calculate_L(df):
         for i in range(1, len(df)):
-            df.at[i, "L"] = (df.at[i - 1, "L"] + df.at[i, "LC"]) * df.at[i, "r"]
+            df.at[i, "L"] = (df.at[i - 1, "L"] + df.at[i - 1, "LC"]) * df.at[i, "r"]
 
         # Loan cannot be less than 0
         df["L"] = df["L"].apply(lambda x: 0 if x < 0 else x)
@@ -103,7 +103,7 @@ class LoanScenario:
     @staticmethod
     def calculate_B(df):
         for i in range(1, len(df)):
-            df.at[i, "B"] = df.at[i - 1, "B"] + df.at[i, "LC"] + df.at[i, "BC"]
+            df.at[i, "B"] = df.at[i - 1, "B"] + df.at[i - 1, "LC"] + df.at[i, "BC"]
         return df
 
     @staticmethod
