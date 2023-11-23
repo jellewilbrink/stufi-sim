@@ -16,6 +16,15 @@ class LoanScenario:
         # Setup initial variables/parameters
         self.calculated = False
 
+        # Store the input variables
+        self.L0 = L0
+        self.B0 = B0
+        self.start_year = start_year
+        self.end_year = end_year
+        self.LC_dict = LC_dict
+        self.BC_dict = BC_dict
+        self.R_dict = R_dict
+
         # Setup dataframe
 
         # Generate a list of dates for all months between start and end year
@@ -63,6 +72,24 @@ class LoanScenario:
         self.df.fillna(0, inplace=True)
         self.df = self.calculate_L(self.df)
         self.df = self.calculate_B(self.df)
+
+    def get_total_interest(self):
+        """
+        Calculate the total interest paid:
+        L_end_date - (L0 + sum(LC))
+
+        Returns:
+        float: total interest paid, if self.calculated = True, else returns 0.
+        """
+        if not self.calculated:
+            return 0.0
+
+        # Don't count the last row , because that is only added to L in the next month
+        LC_total = self.df["LC"].sum() - self.df["LC"].iloc[-1]
+        L_total = self.df["L"].iloc[-1]        
+        total_interest = L_total - (self.L0 + LC_total)
+        
+        return total_interest
 
     @staticmethod
     def calculate_L(df):
